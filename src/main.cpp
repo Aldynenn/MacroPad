@@ -48,6 +48,7 @@ void handleKey(char key, KeyState state) {
   switch (key) {
   case '0':
     if (state == PRESSED) {
+      photoshopGroupAndMerge();
     }
     else if (state == HOLD) {
     }
