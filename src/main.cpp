@@ -18,7 +18,7 @@ unsigned long startTime;
 String msg;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   loopCount = 0;
   startTime = millis();
   msg = "";
