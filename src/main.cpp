@@ -6,10 +6,11 @@
 const byte ROWS = 4;
 const byte COLS = 5;
 char keys[ROWS][COLS] = {
-    {'0', '1', '2', '3', '4'},
-    {'5', '6', '7', '8', '9'},
-    {'A', 'B', 'C', 'D', 'E'},
-    {'F', 'G', 'H', 'I', 'J'}};
+  {'0', '1', '2', '3', '4'},
+  {'5', '6', '7', '8', '9'},
+  {'A', 'B', 'C', 'D', 'E'},
+  {'F', 'G', 'H', 'I', 'J'}
+};
 byte rowPins[ROWS] = {5, 4, 3, 2};
 byte colPins[COLS] = {10, 9, 8, 7, 6};
 
@@ -34,24 +35,23 @@ void loop() {
     startTime = millis();
     loopCount = 0;
   }
-
-  // Fills keypad.key[ ] array with up-to 10 active keys.
-  // Returns true if there are ANY active keys.
+  
+  //The keypad.key[] array can have 10 active keys at max
   if (keypad.getKeys()) {
     for (int i = 0; i < LIST_MAX; i++) {
       if (keypad.key[i].stateChanged) {
-        switch (keypad.key[i].kstate) { // Report active key state : IDLE, PRESSED, HOLD, or RELEASED
-        case PRESSED:
-          msg = " PRESSED.";
-          break;
-        case HOLD:
-          msg = " HOLD.";
-          break;
-        case RELEASED:
-          msg = " RELEASED.";
-          break;
-        case IDLE:
-          msg = " IDLE.";
+        switch (keypad.key[i].kstate) {
+          case PRESSED:
+            msg = " PRESSED.";
+            break;
+          case HOLD:
+            msg = " HOLD.";
+            break;
+          case RELEASED:
+            msg = " RELEASED.";
+            break;
+          case IDLE:
+            msg = " IDLE.";
         }
         Serial.print("Key ");
         Serial.print(keypad.key[i].kchar);
