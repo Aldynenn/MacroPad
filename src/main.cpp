@@ -1,5 +1,7 @@
 #include <Arduino.h>
 #include <Keypad.h>
+#include <HID-Project.h>
+#include <macros.h>
 
 const byte ROWS = 4;
 const byte COLS = 5;
