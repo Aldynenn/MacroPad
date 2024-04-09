@@ -35,27 +35,25 @@ void loop() {
     startTime = millis();
     loopCount = 0;
   }
-  
+
   //The keypad.key[] array can have 10 active keys at max
   if (keypad.getKeys()) {
     for (int i = 0; i < LIST_MAX; i++) {
       if (keypad.key[i].stateChanged) {
         switch (keypad.key[i].kstate) {
           case PRESSED:
-            msg = " PRESSED.";
+            msg = " PRESSED";
             break;
           case HOLD:
-            msg = " HOLD.";
+            msg = " HELD";
             break;
           case RELEASED:
-            msg = " RELEASED.";
+            msg = " RELEASED";
             break;
           case IDLE:
-            msg = " IDLE.";
+            msg = " IDLE";
         }
-        Serial.print("Key ");
-        Serial.print(keypad.key[i].kchar);
-        Serial.println(msg);
+        Serial.print("Key " + keypad.key[i].kchar + msg);
       }
     }
   }
