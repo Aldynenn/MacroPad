@@ -2,51 +2,70 @@
 #define DELAY_2 100
 #define DELAY_3 500
 
+template<typename T>
+inline void press(T key, int mils = DELAY) {
+    Keyboard.press(key);
+    delay(mils);
+}
+
+template<typename T>
+inline void release(T key, int mils = 0) {
+    Keyboard.release(key);
+    delay(mils);
+}
+
+inline void releaseAll() {
+    Keyboard.releaseAll();
+}
+
 //PHOTOSHOP
 void photoshopExport() {
-    Keyboard.releaseAll();
-    Keyboard.press(KEY_LEFT_CTRL); /*-----------*/ delay(DELAY);
-    Keyboard.press(KEY_LEFT_SHIFT); /*----------*/ delay(DELAY);
-    Keyboard.press(KEY_LEFT_ALT); /*------------*/ delay(DELAY);
-    Keyboard.press('W'); /*---------------------*/ delay(DELAY);
-    Keyboard.releaseAll();
+    releaseAll();
+    press(KEY_LEFT_CTRL);
+    press(KEY_LEFT_SHIFT);
+    press(KEY_LEFT_ALT);
+    press('w');
+    releaseAll();
 }
 void photoshopHue() {
-    Keyboard.releaseAll();
-    Keyboard.press(KEY_LEFT_CTRL); /*-----------*/ delay(DELAY);
-    Keyboard.press('U'); /*---------------------*/ delay(DELAY);
-    Keyboard.releaseAll();
+    releaseAll();
+    press(KEY_LEFT_CTRL);
+    press('u');
+    releaseAll();
 }
 void photoshopGroupAndMerge() {
-    Keyboard.releaseAll();
-    Keyboard.press(KEY_LEFT_CTRL); /*-----------*/ delay(DELAY);
-    Keyboard.press('g'); /*---------------------*/ delay(DELAY);
-    Keyboard.releaseAll();
-    Keyboard.press(KEY_LEFT_CTRL); /*-----------*/ delay(DELAY);
-    Keyboard.press(','); /*---------------------*/ delay(DELAY);
-    Keyboard.releaseAll();
-    Keyboard.press(KEY_LEFT_CTRL); /*-----------*/ delay(DELAY);
-    Keyboard.press('j'); /*---------------------*/ delay(DELAY);
-    Keyboard.releaseAll();
-    Keyboard.press(KEY_LEFT_CTRL); /*-----------*/ delay(DELAY);
-    Keyboard.press(','); /*---------------------*/ delay(DELAY);
-    Keyboard.releaseAll();
-    Keyboard.press(KEY_LEFT_CTRL); /*-----------*/ delay(DELAY);
-    Keyboard.press('e'); /*---------------------*/ delay(DELAY);
-    Keyboard.releaseAll();
+    releaseAll();
+    press(KEY_LEFT_CTRL);
+    press('g');
+    release('g');
+    press(',');
+    release(',');
+    press('j');
+    release('j');
+    press(',');
+    release(',');
+    press('e');
+    releaseAll();
+}
+void photoshopCameraRaw() {
+    releaseAll();
+    press(KEY_LEFT_SHIFT);
+    press(KEY_LEFT_CTRL);
+    press('a');
+    releaseAll();
 }
 
 
 //DISCORD
 void discordMuteToggle() {
-    Keyboard.releaseAll();
-    Keyboard.press(KEY_F24); /*-----------------*/ delay(DELAY);
-    Keyboard.releaseAll();
+    releaseAll();
+    press(KEY_F24);
+    releaseAll();
 }
 void discordDeafenToggle() {
-    Keyboard.releaseAll();
-    Keyboard.press(KEY_F23); /*-----------------*/ delay(DELAY);
-    Keyboard.releaseAll();
+    releaseAll();
+    press(KEY_F23);
+    releaseAll();
 }
 
 
@@ -57,32 +76,27 @@ void systemVolumeUp() {
 void systemVolumeDown() {
     Consumer.write(MEDIA_VOLUME_DOWN);
 }
-void systemVolumeMute() {
+void systemVolumeMuteToggle() {
     Consumer.write(MEDIA_VOLUME_MUTE);
 }
-void systemPrintScreen() {
-    Keyboard.releaseAll();
-    Keyboard.press(KEY_PRINTSCREEN); /*---------*/ delay(DELAY);
-    Keyboard.releaseAll();
-}
 void systemScreenSnippet() {
-    Keyboard.releaseAll();
-    Keyboard.press(KEY_LEFT_SHIFT); /*----------*/ delay(DELAY);
-    Keyboard.press(KEY_LEFT_GUI); /*------------*/ delay(DELAY);
-    Keyboard.press('S'); /*---------------------*/ delay(DELAY);
-    Keyboard.releaseAll();
+    releaseAll();
+    press(KEY_LEFT_SHIFT);
+    press(KEY_LEFT_GUI);
+    press('s');
+    releaseAll();
 }
 
 
 //BROWSER
 void browserRefresh() {
-    Keyboard.releaseAll();
-    Keyboard.press(KEY_F5); /*------------------*/ delay(DELAY);
-    Keyboard.releaseAll();
+    releaseAll();
+    press(KEY_F5);
+    releaseAll();
 }
 void browserForceRefresh() {
-    Keyboard.releaseAll();
-    Keyboard.press(KEY_LEFT_CTRL); /*-----------*/ delay(DELAY);
-    Keyboard.press(KEY_F5); /*------------------*/ delay(DELAY);
-    Keyboard.releaseAll();
+    releaseAll();
+    press(KEY_LEFT_CTRL);
+    press(KEY_F5);
+    releaseAll();
 }
