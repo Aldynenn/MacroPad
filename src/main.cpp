@@ -9,18 +9,18 @@ const byte ROWS = 4;
 const byte COLS = 4;
 
 // char keys[ROWS][COLS] = {
-//   {'0', '1', '2', '3', '4'},
-//   {'5', '6', '7', '8', '9'},
 //   {'A', 'B', 'C', 'D', 'E'},
-//   {'F', 'G', 'H', 'I', 'J'}
+//   {'F', 'G', 'H', 'I', 'J'},
+//   {'K', 'L', 'M', 'N', 'O'},
+//   {'P', 'Q', 'R', 'S', 'T'}
 // };
 
 // For debugging with common 4x4 button matrix
 char keys[ROWS][COLS] = {
-  {'0', '1', '2', '3'},
-  {'4', '5', '6', '7'},
-  {'8', '9', 'A', 'B'},
-  {'C', 'D', 'E', 'F'}
+  {'A', 'B', 'C', 'D'},
+  {'E', 'F', 'G', 'H'},
+  {'I', 'J', 'K', 'L'},
+  {'M', 'N', 'O', 'P'}
 };
 
 byte rowPins[ROWS] = {5, 4, 3, 2};
@@ -44,78 +44,20 @@ void averageLoopsPerSecond() {
 
 
 /* ================= PAIRING MACROS TO KEYS ================= */
+bool heldDown = false;
 void handleKey(char key, KeyState state) {
-  switch (key) {
-  case '0':
-    if (state == PRESSED) {
-      Serial.println("Key 0 pressed");
+  byte keyIndex = (byte)key-(byte)'A';
+  if (state == PRESSED) {
+    heldDown = false;
+  }
+  else if (state == HOLD) {
+    heldDown = true;
+    macrosOnHold[keyIndex]();
+  }
+  else if (state == RELEASED) {
+    if (!heldDown) {
+      macrosOnPress[keyIndex]();
     }
-    else if (state == HOLD) {
-      Serial.println("Key 0 held");
-    }
-  break;
-  case '1':
-    if (state == PRESSED) {
-      Serial.println("Key 1 pressed");
-    }
-    else if (state == HOLD) {
-      Serial.println("Key 1 held");
-    }
-  break;
-  case '2':
-    if (state == PRESSED) {
-      Serial.println("Key 2 pressed");
-    }
-    else if (state == HOLD) {
-      Serial.println("Key 2 held");
-    }
-  break;
-  case '3':
-    if (state == PRESSED) {
-      Serial.println("Key 3 pressed");
-    }
-    else if (state == HOLD) {
-      Serial.println("Key 3 held");
-    }
-  break;
-  case '4':
-    if (state == PRESSED) {
-    }
-    else if (state == HOLD) {
-    }
-  break;
-  case '5':
-  break;
-  case '6':
-  break;
-  case '7':
-  break;
-  case '8':
-  break;
-  case '9':
-  break;
-  case 'A':
-  break;
-  case 'B':
-  break;
-  case 'C':
-  break;
-  case 'D':
-  break;
-  case 'E':
-  break;
-  case 'F':
-  break;
-  case 'G':
-  break;
-  case 'H':
-  break;
-  case 'I':
-  break;
-  case 'J':
-  break;
-  default:
-  break;
   }
 }
 
@@ -123,9 +65,10 @@ void handleKey(char key, KeyState state) {
 /* ========================= SETUP ========================== */
 void setup() {
   Serial.begin(115200);
-  keypad.setHoldTime(350);
+  keypad.setHoldTime(200);
   loopCount = 0;
   startTime = millis();
+  assignMacros();
 }
 
 

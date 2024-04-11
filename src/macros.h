@@ -1,3 +1,5 @@
+#define KEY_COUNT 20
+
 #define DELAY 10
 #define DELAY_2 100
 #define DELAY_3 500
@@ -73,8 +75,18 @@ void discordDeafenToggle() {
 void systemVolumeUp() {
     Consumer.write(MEDIA_VOLUME_UP);
 }
+void systemVolumeUpMultiple() {
+    for (byte i = 0; i < 5; i++) {
+        systemVolumeUp();
+    }
+}
 void systemVolumeDown() {
     Consumer.write(MEDIA_VOLUME_DOWN);
+}
+void systemVolumeDownMultiple() {
+    for (byte i = 0; i < 5; i++) {
+        systemVolumeDown();
+    }
 }
 void systemVolumeMuteToggle() {
     Consumer.write(MEDIA_VOLUME_MUTE);
@@ -84,6 +96,35 @@ void systemScreenSnippet() {
     press(KEY_LEFT_SHIFT);
     press(KEY_LEFT_GUI);
     press('s');
+    releaseAll();
+}
+
+
+//VS CODE
+void moveLineUp() {
+    releaseAll();
+    press(KEY_LEFT_ALT);
+    press(KEY_UP_ARROW);
+    releaseAll();
+}
+void moveLineDown() {
+    releaseAll();
+    press(KEY_LEFT_ALT);
+    press(KEY_DOWN_ARROW);
+    releaseAll();
+}
+void cloneLineUp() {
+    releaseAll();
+    press(KEY_LEFT_SHIFT);
+    press(KEY_LEFT_ALT);
+    press(KEY_UP_ARROW);
+    releaseAll();
+}
+void cloneLineDown() {
+    releaseAll();
+    press(KEY_LEFT_SHIFT);
+    press(KEY_LEFT_ALT);
+    press(KEY_DOWN_ARROW);
     releaseAll();
 }
 
@@ -99,4 +140,40 @@ void browserForceRefresh() {
     press(KEY_LEFT_CTRL);
     press(KEY_F5);
     releaseAll();
+}
+
+
+/* ============== PAIRING MACROS TO KEY INDEXES ============= */
+void placeholder() {
+    Serial.println("No macro assigned for this event");
+}
+void (*macrosOnPress[KEY_COUNT])();
+void (*macrosOnHold[KEY_COUNT])();
+
+void assignMacros() {
+    //MACROS THAT SHOULD RUN WHEN KEY IS QUICKLY PRESSED
+    macrosOnPress[0] = systemVolumeUp;
+    macrosOnPress[1] = systemVolumeDown;
+    macrosOnPress[2] = systemVolumeMuteToggle;
+    macrosOnPress[3] = discordMuteToggle;
+    macrosOnPress[4] = browserRefresh;
+    macrosOnPress[14] = moveLineUp;
+    macrosOnPress[15] = moveLineDown;
+
+    //MACROS THAT SHOULD RUN WHEN KEY IS HELD DOWN
+    macrosOnHold[0] = systemVolumeUpMultiple;
+    macrosOnHold[1] = systemVolumeDownMultiple;
+    macrosOnHold[3] = discordDeafenToggle;
+    macrosOnHold[4] = browserForceRefresh;
+    macrosOnHold[14] = cloneLineUp;
+    macrosOnHold[15] = cloneLineDown;
+
+    for (int i = 0; i < KEY_COUNT; i++) {
+        if (macrosOnPress[i] == NULL) {
+            macrosOnPress[i] = placeholder;
+        }
+        if (macrosOnHold[i] == NULL) {
+            macrosOnHold[i] = placeholder;
+        }
+    }
 }
