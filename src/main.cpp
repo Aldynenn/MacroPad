@@ -6,22 +6,22 @@
 
 /* =================== SETTING UP KEYMAPS =================== */
 const byte ROWS = 4;
-const byte COLS = 5;
+const byte COLS = 4;
 
-char keys[ROWS][COLS] = {
-  {'0', '1', '2', '3', '4'},
-  {'5', '6', '7', '8', '9'},
-  {'A', 'B', 'C', 'D', 'E'},
-  {'F', 'G', 'H', 'I', 'J'}
-};
+// char keys[ROWS][COLS] = {
+//   {'0', '1', '2', '3', '4'},
+//   {'5', '6', '7', '8', '9'},
+//   {'A', 'B', 'C', 'D', 'E'},
+//   {'F', 'G', 'H', 'I', 'J'}
+// };
 
 // For debugging with common 4x4 button matrix
-// char keys[ROWS][COLS] = {
-//   {'0', '1', '2', '3'},
-//   {'4', '5', '6', '7'},
-//   {'8', '9', 'A', 'B'},
-//   {'C', 'D', 'E', 'F'}
-// };
+char keys[ROWS][COLS] = {
+  {'0', '1', '2', '3'},
+  {'4', '5', '6', '7'},
+  {'8', '9', 'A', 'B'},
+  {'C', 'D', 'E', 'F'}
+};
 
 byte rowPins[ROWS] = {5, 4, 3, 2};
 byte colPins[COLS] = {9, 8, 7, 6};
@@ -48,24 +48,34 @@ void handleKey(char key, KeyState state) {
   switch (key) {
   case '0':
     if (state == PRESSED) {
+      Serial.println("Key 0 pressed");
     }
     else if (state == HOLD) {
+      Serial.println("Key 0 held");
     }
   break;
   case '1':
     if (state == PRESSED) {
+      Serial.println("Key 1 pressed");
     }
     else if (state == HOLD) {
+      Serial.println("Key 1 held");
     }
   break;
   case '2':
     if (state == PRESSED) {
+      Serial.println("Key 2 pressed");
     }
     else if (state == HOLD) {
+      Serial.println("Key 2 held");
     }
   break;
   case '3':
     if (state == PRESSED) {
+      Serial.println("Key 3 pressed");
+    }
+    else if (state == HOLD) {
+      Serial.println("Key 3 held");
     }
   break;
   case '4':
@@ -113,6 +123,7 @@ void handleKey(char key, KeyState state) {
 /* ========================= SETUP ========================== */
 void setup() {
   Serial.begin(115200);
+  keypad.setHoldTime(350);
   loopCount = 0;
   startTime = millis();
 }
