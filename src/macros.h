@@ -147,6 +147,25 @@ void browserForceRefresh() {
 void placeholder() {
     Serial.println("No macro assigned for this event");
 }
+
+
+struct KeyColor {
+    byte r;
+    byte g;
+    byte b;
+};
+struct KeyMacro {
+    void (*onPress)();
+    void (*onHold)();
+    String name;
+    KeyColor idleColor;
+    KeyColor pressColor;
+    KeyColor holdColor;
+};
+
+
+KeyMacro macros[KEY_COUNT];
+
 void (*macrosOnPress[KEY_COUNT])();
 void (*macrosOnHold[KEY_COUNT])();
 
@@ -157,16 +176,18 @@ void assignMacros() {
     macrosOnPress[2] = systemVolumeMuteToggle;
     macrosOnPress[3] = discordMuteToggle;
     macrosOnPress[4] = browserRefresh;
-    macrosOnPress[14] = moveLineUp;
-    macrosOnPress[15] = moveLineDown;
+    macrosOnPress[5] = photoshopGroupAndMerge;
+    macrosOnPress[6] = moveLineUp;
+    macrosOnPress[7] = moveLineDown;
 
     //MACROS THAT SHOULD RUN WHEN KEY IS HELD DOWN
     macrosOnHold[0] = systemVolumeUpMultiple;
     macrosOnHold[1] = systemVolumeDownMultiple;
     macrosOnHold[3] = discordDeafenToggle;
     macrosOnHold[4] = browserForceRefresh;
-    macrosOnHold[14] = cloneLineUp;
-    macrosOnHold[15] = cloneLineDown;
+    macrosOnHold[5] = photoshopCameraRaw;
+    macrosOnHold[6] = cloneLineUp;
+    macrosOnHold[7] = cloneLineDown;
 
     for (int i = 0; i < KEY_COUNT; i++) {
         if (macrosOnPress[i] == NULL) {
