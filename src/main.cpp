@@ -6,15 +6,13 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <FastLED.h>
+#include <macros.h>
 
 /* ==================== SETTING UP LEDS ===================== */
 #define LED_DATA_PIN 15
 #define NUM_LEDS 8
 CRGB leds[NUM_LEDS];
 bool ledState = false;
-#include <macros.h>
-
-
 
 
 /* =================== SETTING UP DISPLAY =================== */
@@ -80,11 +78,11 @@ void handleKey(char key, KeyState state) {
   }
   else if (state == HOLD) {
     heldDown = true;
-    macrosOnHold[keyIndex]();
+    macros[keyIndex].onHold();
   }
   else if (state == RELEASED) {
     if (!heldDown) {
-      macrosOnPress[keyIndex]();
+      macros[keyIndex].onPress();
     }
   }
 }
@@ -100,7 +98,7 @@ void setup() {
   assignMacros();
   if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
     Serial.println(F("SSD1306 allocation failed"));
-    for(;;); // Don't proceed, loop forever
+    for(;;);
   }
   display.clearDisplay();
 
@@ -118,11 +116,11 @@ void loop() {
     for (int i = 0; i < LIST_MAX; i++) {
       if (keypad.key[i].stateChanged) {
         char currentKey = keypad.key[i].kchar;  
-        FastLED.clear();
-        leds[(byte)currentKey-(byte)'A'] = CRGB::White;
-        FastLED.show();
         KeyState currentState = keypad.key[i].kstate;
         handleKey(currentKey, currentState);
+        // FastLED.clear();
+        // leds[(byte)currentKey-(byte)'A'] = CRGB::White;
+        // FastLED.show();
       }
     }
   }

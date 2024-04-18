@@ -1,4 +1,4 @@
-#define KEY_COUNT 20
+#define KEY_COUNT 8
 
 #define DELAY 10
 #define DELAY_2 100
@@ -163,38 +163,34 @@ struct KeyMacro {
     KeyColor holdColor;
 };
 
-
 KeyMacro macros[KEY_COUNT];
-
-void (*macrosOnPress[KEY_COUNT])();
-void (*macrosOnHold[KEY_COUNT])();
 
 void assignMacros() {
     //MACROS THAT SHOULD RUN WHEN KEY IS QUICKLY PRESSED
-    macrosOnPress[0] = systemVolumeUp;
-    macrosOnPress[1] = systemVolumeDown;
-    macrosOnPress[2] = systemVolumeMuteToggle;
-    macrosOnPress[3] = discordMuteToggle;
-    macrosOnPress[4] = browserRefresh;
-    macrosOnPress[5] = photoshopGroupAndMerge;
-    macrosOnPress[6] = moveLineUp;
-    macrosOnPress[7] = moveLineDown;
+    macros[0].onPress = systemVolumeUp;
+    macros[1].onPress = systemVolumeDown;
+    macros[2].onPress = systemVolumeMuteToggle;
+    macros[3].onPress = discordMuteToggle;
+    macros[4].onPress = browserRefresh;
+    macros[5].onPress = photoshopGroupAndMerge;
+    macros[6].onPress = moveLineUp;
+    macros[7].onPress = moveLineDown;
 
     //MACROS THAT SHOULD RUN WHEN KEY IS HELD DOWN
-    macrosOnHold[0] = systemVolumeUpMultiple;
-    macrosOnHold[1] = systemVolumeDownMultiple;
-    macrosOnHold[3] = discordDeafenToggle;
-    macrosOnHold[4] = browserForceRefresh;
-    macrosOnHold[5] = photoshopCameraRaw;
-    macrosOnHold[6] = cloneLineUp;
-    macrosOnHold[7] = cloneLineDown;
+    macros[0].onHold = systemVolumeUpMultiple;
+    macros[1].onHold = systemVolumeDownMultiple;
+    macros[3].onHold = discordDeafenToggle;
+    macros[4].onHold = browserForceRefresh;
+    macros[5].onHold = photoshopCameraRaw;
+    macros[6].onHold = cloneLineUp;
+    macros[7].onHold = cloneLineDown;
 
     for (int i = 0; i < KEY_COUNT; i++) {
-        if (macrosOnPress[i] == NULL) {
-            macrosOnPress[i] = placeholder;
+        if (macros[i].onPress == NULL) {
+            macros[i].onPress = placeholder;
         }
-        if (macrosOnHold[i] == NULL) {
-            macrosOnHold[i] = placeholder;
+        if (macros[i].onHold == NULL) {
+            macros[i].onHold = placeholder;
         }
     }
 }
