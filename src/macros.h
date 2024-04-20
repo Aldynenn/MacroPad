@@ -1,5 +1,7 @@
 #define KEY_COUNT 8
+#define PROFILE_COUNT 2
 
+//STANDARD DELAYS, CHANGE THESE TO SUIT YOUR PREFERENCES
 #define DELAY 10
 #define DELAY_2 100
 #define DELAY_3 500
@@ -145,52 +147,106 @@ void browserForceRefresh() {
 
 /* ============== PAIRING MACROS TO KEY INDEXES ============= */
 void placeholder() {
-    Serial.println("No macro assigned for this event");
+    Serial.println("Placeholder Macro Ran | No macro assigned for this event!");
 }
 
-
-struct KeyColor {
-    byte r;
-    byte g;
-    byte b;
+class KeyColor {
+    public:
+        byte r;
+        byte g;
+        byte b;
+        KeyColor(byte r, byte g, byte b) {
+            this->r = r;
+            this->g = g;
+            this->b = b;
+        }
+        KeyColor() {
+            this->r = 0;
+            this->g = 0;
+            this->b = 0;
+        }
 };
-struct KeyMacro {
-    void (*onPress)();
-    void (*onHold)();
-    String name;
-    KeyColor idleColor;
-    KeyColor pressColor;
-    KeyColor holdColor;
+
+class KeyMacro {
+    public:
+        void (*onPress)();
+        void (*onHold)();
+        String pressName;
+        String holdName;
+        KeyColor idleColor;
+        KeyColor pressColor;
+        KeyColor holdColor;
+        KeyMacro(void (*onPress)(), void (*onHold)(), String pressName, String holdName, KeyColor idleColor, KeyColor pressColor, KeyColor holdColor) {
+            this->onPress = onPress;
+            this->onHold = onHold;
+            this->pressName = pressName;
+            this->holdName = holdName;
+            this->idleColor = idleColor;
+            this->pressColor = pressColor;
+            this->holdColor = holdColor;
+        }
+        KeyMacro(void (*onPress)(), String pressName, KeyColor idleColor, KeyColor pressColor, KeyColor holdColor) {
+            this->onPress = onPress;
+            this->onHold = placeholder;
+            this->pressName = pressName;
+            this->idleColor = idleColor;
+            this->pressColor = pressColor;
+            this->holdColor = holdColor;
+        }
+        KeyMacro() {
+            this->onPress = placeholder;
+            this->onHold = placeholder;
+            this->pressName = "Unnamed Macro";
+            this->holdName = "Unnamed Macro";
+            this->idleColor = KeyColor(255, 0, 0);
+            this->pressColor = KeyColor(0, 255, 0);
+            this->holdColor = KeyColor(0, 0, 255);
+        }
+        void press() {
+            Serial.println(pressName);
+            onPress();
+        }
+        void hold() {
+            Serial.println(holdName);
+            onHold();
+        }
 };
 
-KeyMacro macros[KEY_COUNT];
+class Profile {
+    public:
+        String name;
+        KeyMacro macros[KEY_COUNT];
+
+        Profile(String name, KeyMacro macros[KEY_COUNT]) {
+            this->name = name;
+            for (int i = 0; i < KEY_COUNT; i++) {
+                this->macros[i] = macros[i];
+            }
+        }
+        Profile(String name) {
+            this->name = name;
+            for (int i = 0; i < KEY_COUNT; i++) {
+                this->macros[i] = KeyMacro();
+            }
+        }
+        Profile() {
+            this->name = "Unnamed Profile";
+            for (int i = 0; i < KEY_COUNT; i++) {
+                this->macros[i] = KeyMacro();
+            }
+        }
+};
+
+Profile profiles[2];
 
 void assignMacros() {
-    //MACROS THAT SHOULD RUN WHEN KEY IS QUICKLY PRESSED
-    macros[0].onPress = systemVolumeUp;
-    macros[1].onPress = systemVolumeDown;
-    macros[2].onPress = systemVolumeMuteToggle;
-    macros[3].onPress = discordMuteToggle;
-    macros[4].onPress = browserRefresh;
-    macros[5].onPress = photoshopGroupAndMerge;
-    macros[6].onPress = moveLineUp;
-    macros[7].onPress = moveLineDown;
-
-    //MACROS THAT SHOULD RUN WHEN KEY IS HELD DOWN
-    macros[0].onHold = systemVolumeUpMultiple;
-    macros[1].onHold = systemVolumeDownMultiple;
-    macros[3].onHold = discordDeafenToggle;
-    macros[4].onHold = browserForceRefresh;
-    macros[5].onHold = photoshopCameraRaw;
-    macros[6].onHold = cloneLineUp;
-    macros[7].onHold = cloneLineDown;
-
-    for (int i = 0; i < KEY_COUNT; i++) {
-        if (macros[i].onPress == NULL) {
-            macros[i].onPress = placeholder;
-        }
-        if (macros[i].onHold == NULL) {
-            macros[i].onHold = placeholder;
-        }
-    }
+    profiles[0] = Profile("Default Profile");
+    profiles[0].macros[0] = KeyMacro(systemVolumeUp, systemVolumeUpMultiple, "System Volume Up", "System Volume Up X10", KeyColor(0, 255, 255), KeyColor(0, 255, 127), KeyColor(63, 255, 127));
+    profiles[0].macros[1] = KeyMacro(systemVolumeDown, systemVolumeDownMultiple, "System Volume Down", "System Volume Down X10", KeyColor(0, 255, 255), KeyColor(0, 127, 255), KeyColor(63, 127, 255));
+    profiles[0].macros[2] = KeyMacro(systemVolumeMuteToggle, "System Volume Mute Toggle", KeyColor(255, 0, 0), KeyColor(0, 255, 0), KeyColor(0, 0, 255));
+    profiles[0].macros[3] = KeyMacro(discordMuteToggle, discordDeafenToggle, "Discord Mute Toggle", "Discord Deafen Toggle", KeyColor(255, 0, 0), KeyColor(0, 255, 0), KeyColor(0, 0, 255));
+    profiles[0].macros[4] = KeyMacro(browserRefresh, browserForceRefresh, "Browser Refresh", "Browser Force Refresh", KeyColor(255, 0, 0), KeyColor(0, 255, 0), KeyColor(0, 0, 255));
+    profiles[0].macros[5] = KeyMacro();
+    profiles[0].macros[6] = KeyMacro(moveLineUp, cloneLineUp, "Move Line Up", "Clone Line Up", KeyColor(255, 0, 0), KeyColor(0, 255, 0), KeyColor(0, 0, 255));
+    profiles[0].macros[7] = KeyMacro(moveLineDown, cloneLineDown, "Move Line Down", "Clone Line Down", KeyColor(255, 0, 0), KeyColor(0, 255, 0), KeyColor(0, 0, 255));
 }

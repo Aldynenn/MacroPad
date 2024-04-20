@@ -8,6 +8,12 @@
 #include <FastLED.h>
 #include <macros.h>
 
+/* ===================== ROTARY ENCODER ===================== */
+#define ROTARY_ENCODER_A 10
+#define ROTARY_ENCODER_B 16
+#define ROTARY_ENCODER_SW 14
+
+
 /* ==================== SETTING UP LEDS ===================== */
 #define LED_DATA_PIN 15
 #define NUM_LEDS 8
@@ -24,10 +30,9 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 
 /* =================== SETTING UP KEYMAPS =================== */
-const byte ROWS = 2;
-const byte COLS = 4;
-
-// For debugging with common 4x4 button matrix
+// For debugging with common 4x4 button matrix:
+// const byte ROWS = 4;
+// const byte COLS = 4;
 // char keys[ROWS][COLS] = {
 //   {'A', 'B', 'C', 'D'},
 //   {'E', 'F', 'G', 'H'},
@@ -35,6 +40,8 @@ const byte COLS = 4;
 //   {'M', 'N', 'O', 'P'}
 // };
 
+const byte ROWS = 2;
+const byte COLS = 4;
 char keys[ROWS][COLS] = {
   {'A', 'B', 'C', 'D'},
   {'E', 'F', 'G', 'H'}
@@ -52,37 +59,29 @@ unsigned long startTime;
 void averageLoopsPerSecond() {
   loopCount++;
   if ((millis() - startTime) > 1000) {
-    Serial.print("Average loops per second = ");
+    Serial.print("AVG loops/s: ");
     Serial.println(loopCount);
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(SSD1306_WHITE);
-    display.setCursor(0,0);
-    display.print("Loops per second:");
-    display.setTextSize(1);
-    display.setCursor(0,20);
-    display.print(loopCount);
-    display.display();
     startTime = millis();
     loopCount = 0;
   }
 }
 
 
-/* ================= PAIRING MACROS TO KEYS ================= */
+/* =============== HANDLING KEYPRESS AND HOLD =============== */
 bool heldDown = false;
+byte currentProfile = 0;
 void handleKey(char key, KeyState state) {
-  byte keyIndex = (byte)key-(byte)'A';
+  byte keyIndex = (byte)key-(byte)'A'; 
   if (state == PRESSED) {
     heldDown = false;
   }
   else if (state == HOLD) {
     heldDown = true;
-    macros[keyIndex].onHold();
+    profiles[currentProfile].macros[keyIndex].hold();
   }
   else if (state == RELEASED) {
     if (!heldDown) {
-      macros[keyIndex].onPress();
+      profiles[currentProfile].macros[keyIndex].press();
     }
   }
 }
@@ -91,16 +90,27 @@ void handleKey(char key, KeyState state) {
 /* ========================= SETUP ========================== */
 void setup() {
   pinMode(LED_DATA_PIN, OUTPUT);
+  pinMode(ROTARY_ENCODER_A, INPUT);
+  pinMode(ROTARY_ENCODER_B, INPUT);
+  pinMode(ROTARY_ENCODER_SW, INPUT);
+
   Serial.begin(115200);
-  keypad.setHoldTime(200);
   loopCount = 0;
   startTime = millis();
+
+  keypad.setHoldTime(200);
+
   assignMacros();
-  if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
-    Serial.println(F("SSD1306 allocation failed"));
-    for(;;);
-  }
-  display.clearDisplay();
+
+  // if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
+  //   while (1) {
+  //     Serial.println(F("SSD1306 allocation failed"));
+  //   }
+  // }
+  
+  // display.display();
+  // delay(2000);
+  // display.clearDisplay();
 
   FastLED.addLeds<NEOPIXEL, LED_DATA_PIN>(leds, NUM_LEDS);  
   FastLED.clear();
@@ -118,9 +128,9 @@ void loop() {
         char currentKey = keypad.key[i].kchar;  
         KeyState currentState = keypad.key[i].kstate;
         handleKey(currentKey, currentState);
-        // FastLED.clear();
-        // leds[(byte)currentKey-(byte)'A'] = CRGB::White;
-        // FastLED.show();
+        FastLED.clear();
+        leds[(byte)currentKey-(byte)'A'] = CRGB::White;
+        FastLED.show();
       }
     }
   }
