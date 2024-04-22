@@ -1,10 +1,6 @@
 #include <Arduino.h>
 #include <Keypad.h>
 #include <HID-Project.h>
-#include <SPI.h>
-#include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
 #include <FastLED.h>
 #include <macros.h>
 
@@ -19,14 +15,6 @@
 #define NUM_LEDS 8
 CRGB leds[NUM_LEDS];
 bool ledState = false;
-
-
-/* =================== SETTING UP DISPLAY =================== */
-#define SCREEN_WIDTH 128
-#define SCREEN_HEIGHT 64
-#define OLED_RESET -1
-#define SCREEN_ADDRESS 0x3C //See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 
 /* =================== SETTING UP KEYMAPS =================== */
@@ -101,16 +89,6 @@ void setup() {
   keypad.setHoldTime(200);
 
   assignMacros();
-
-  // if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
-  //   while (1) {
-  //     Serial.println(F("SSD1306 allocation failed"));
-  //   }
-  // }
-  
-  // display.display();
-  // delay(2000);
-  // display.clearDisplay();
 
   FastLED.addLeds<NEOPIXEL, LED_DATA_PIN>(leds, NUM_LEDS);  
   FastLED.clear();
