@@ -99,7 +99,7 @@ void setup() {
 
 /* ========================== LOOP ========================== */
 void loop() {
-  averageLoopsPerSecond();
+  averageLoopsPerSecond(); // For debugging
   if (keypad.getKeys()) {
     for (int i = 0; i < LIST_MAX; i++) {
       if (keypad.key[i].stateChanged) {
