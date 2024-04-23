@@ -59,17 +59,17 @@ void averageLoopsPerSecond() {
 bool heldDown = false;
 byte currentProfile = 0;
 void handleKey(char key, KeyState state) {
-  byte keyIndex = (byte)key-(byte)'A'; 
+  byte keyIndex = (byte)key-(byte)keys[0][0]; 
   if (state == PRESSED) {
     heldDown = false;
   }
   else if (state == HOLD) {
     heldDown = true;
-    profiles[currentProfile].macros[keyIndex].hold();
+    profiles[currentProfile].macros[keyIndex].onHold();
   }
   else if (state == RELEASED) {
     if (!heldDown) {
-      profiles[currentProfile].macros[keyIndex].press();
+      profiles[currentProfile].macros[keyIndex].onPress();
     }
   }
 }
@@ -107,7 +107,7 @@ void loop() {
         KeyState currentState = keypad.key[i].kstate;
         handleKey(currentKey, currentState);
         FastLED.clear();
-        leds[(byte)currentKey-(byte)'A'] = CRGB::White;
+        leds[(byte)currentKey-(byte)keys[0][0]] = CRGB::White;
         FastLED.show();
       }
     }

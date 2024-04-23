@@ -171,24 +171,19 @@ class KeyMacro {
     public:
         void (*onPress)();
         void (*onHold)();
-        String pressName;
-        String holdName;
         KeyColor idleColor;
         KeyColor pressColor;
         KeyColor holdColor;
-        KeyMacro(void (*onPress)(), void (*onHold)(), String pressName, String holdName, KeyColor idleColor, KeyColor pressColor, KeyColor holdColor) {
+        KeyMacro(void (*onPress)(), void (*onHold)(), KeyColor idleColor, KeyColor pressColor, KeyColor holdColor) {
             this->onPress = onPress;
             this->onHold = onHold;
-            this->pressName = pressName;
-            this->holdName = holdName;
             this->idleColor = idleColor;
             this->pressColor = pressColor;
             this->holdColor = holdColor;
         }
-        KeyMacro(void (*onPress)(), String pressName, KeyColor idleColor, KeyColor pressColor, KeyColor holdColor) {
+        KeyMacro(void (*onPress)(), KeyColor idleColor, KeyColor pressColor, KeyColor holdColor) {
             this->onPress = onPress;
             this->onHold = placeholder;
-            this->pressName = pressName;
             this->idleColor = idleColor;
             this->pressColor = pressColor;
             this->holdColor = holdColor;
@@ -196,41 +191,31 @@ class KeyMacro {
         KeyMacro() {
             this->onPress = placeholder;
             this->onHold = placeholder;
-            this->pressName = "Unnamed Macro";
-            this->holdName = "Unnamed Macro";
             this->idleColor = KeyColor(255, 0, 0);
             this->pressColor = KeyColor(0, 255, 0);
             this->holdColor = KeyColor(0, 0, 255);
-        }
-        void press() {
-            Serial.println(pressName);
-            onPress();
-        }
-        void hold() {
-            Serial.println(holdName);
-            onHold();
         }
 };
 
 class Profile {
     public:
-        String name;
+        byte number;
         KeyMacro macros[KEY_COUNT];
 
-        Profile(String name, KeyMacro macros[KEY_COUNT]) {
-            this->name = name;
+        Profile(byte number, KeyMacro macros[KEY_COUNT]) {
+            this->number = number;
             for (int i = 0; i < KEY_COUNT; i++) {
                 this->macros[i] = macros[i];
             }
         }
-        Profile(String name) {
-            this->name = name;
+        Profile(byte number) {
+            this->number = number;
             for (int i = 0; i < KEY_COUNT; i++) {
                 this->macros[i] = KeyMacro();
             }
         }
         Profile() {
-            this->name = "Unnamed Profile";
+            this->number = 0;
             for (int i = 0; i < KEY_COUNT; i++) {
                 this->macros[i] = KeyMacro();
             }
@@ -240,13 +225,13 @@ class Profile {
 Profile profiles[2];
 
 void assignMacros() {
-    profiles[0] = Profile("Default Profile");
-    profiles[0].macros[0] = KeyMacro(systemVolumeUp, systemVolumeUpMultiple, "System Volume Up", "System Volume Up X10", KeyColor(0, 255, 255), KeyColor(0, 255, 127), KeyColor(63, 255, 127));
-    profiles[0].macros[1] = KeyMacro(systemVolumeDown, systemVolumeDownMultiple, "System Volume Down", "System Volume Down X10", KeyColor(0, 255, 255), KeyColor(0, 127, 255), KeyColor(63, 127, 255));
-    profiles[0].macros[2] = KeyMacro(systemVolumeMuteToggle, "System Volume Mute Toggle", KeyColor(255, 0, 0), KeyColor(0, 255, 0), KeyColor(0, 0, 255));
-    profiles[0].macros[3] = KeyMacro(discordMuteToggle, discordDeafenToggle, "Discord Mute Toggle", "Discord Deafen Toggle", KeyColor(255, 0, 0), KeyColor(0, 255, 0), KeyColor(0, 0, 255));
-    profiles[0].macros[4] = KeyMacro(browserRefresh, browserForceRefresh, "Browser Refresh", "Browser Force Refresh", KeyColor(255, 0, 0), KeyColor(0, 255, 0), KeyColor(0, 0, 255));
+    profiles[0] = Profile(0);
+    profiles[0].macros[0] = KeyMacro(systemVolumeUp, systemVolumeUpMultiple, KeyColor(0, 255, 255), KeyColor(0, 255, 127), KeyColor(63, 255, 127));
+    profiles[0].macros[1] = KeyMacro(systemVolumeDown, systemVolumeDownMultiple, KeyColor(0, 255, 255), KeyColor(0, 127, 255), KeyColor(63, 127, 255));
+    profiles[0].macros[2] = KeyMacro(systemVolumeMuteToggle, KeyColor(255, 0, 0), KeyColor(0, 255, 0), KeyColor(0, 0, 255));
+    profiles[0].macros[3] = KeyMacro(discordMuteToggle, discordDeafenToggle, KeyColor(255, 0, 0), KeyColor(0, 255, 0), KeyColor(0, 0, 255));
+    profiles[0].macros[4] = KeyMacro(browserRefresh, browserForceRefresh, KeyColor(255, 0, 0), KeyColor(0, 255, 0), KeyColor(0, 0, 255));
     profiles[0].macros[5] = KeyMacro();
-    profiles[0].macros[6] = KeyMacro(moveLineUp, cloneLineUp, "Move Line Up", "Clone Line Up", KeyColor(255, 0, 0), KeyColor(0, 255, 0), KeyColor(0, 0, 255));
-    profiles[0].macros[7] = KeyMacro(moveLineDown, cloneLineDown, "Move Line Down", "Clone Line Down", KeyColor(255, 0, 0), KeyColor(0, 255, 0), KeyColor(0, 0, 255));
+    profiles[0].macros[6] = KeyMacro(moveLineUp, cloneLineUp, KeyColor(255, 0, 0), KeyColor(0, 255, 0), KeyColor(0, 0, 255));
+    profiles[0].macros[7] = KeyMacro(moveLineDown, cloneLineDown, KeyColor(255, 0, 0), KeyColor(0, 255, 0), KeyColor(0, 0, 255));
 }
