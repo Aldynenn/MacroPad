@@ -55,25 +55,52 @@ void averageLoopsPerSecond() {
 }
 
 
+/* =================== PROFILE MANAGEMENT =================== */
+byte currentProfile = 0;
+void cycleProfiles() {
+  currentProfile++;
+  if (PROFILE_COUNT <= currentProfile) {
+    currentProfile = 0;
+  }
+}
+
+
 /* =============== HANDLING KEYPRESS AND HOLD =============== */
 bool heldDown = false;
-byte currentProfile = 0;
+unsigned long lastPress = 0;
+unsigned long lastHold = 0;
 void handleKey(char key, KeyState state) {
   byte keyIndex = (byte)key-(byte)keys[0][0]; 
+  KeyMacro macro = profiles[currentProfile].macros[keyIndex];
   if (state == PRESSED) {
     heldDown = false;
   }
   else if (state == HOLD) {
     heldDown = true;
-    profiles[currentProfile].macros[keyIndex].onHold();
+    macro.onHold();
+    lastHold = millis();
+    leds[keyIndex].setRGB(macro.holdColor.r, macro.holdColor.g, macro.holdColor.b);
+    FastLED.show();
   }
   else if (state == RELEASED) {
     if (!heldDown) {
-      profiles[currentProfile].macros[keyIndex].onPress();
+      macro.onPress();      
+      lastPress = millis();
+      leds[keyIndex].setRGB(macro.pressColor.r, macro.pressColor.g, macro.pressColor.b);
+      FastLED.show();
     }
   }
 }
 
+
+void showIdle() {
+  FastLED.clear();
+  for (int i = 0; i < NUM_LEDS; i++) {
+    KeyColor idle = profiles[currentProfile].macros[i].idleColor;
+    leds[i].setRGB(idle.r, idle.g, idle.b);
+  }
+  FastLED.show();
+}
 
 /* ========================= SETUP ========================== */
 void setup() {
@@ -94,21 +121,27 @@ void setup() {
   FastLED.clear();
   FastLED.setBrightness(10);
   FastLED.show();
+  showIdle();
 }
 
 
 /* ========================== LOOP ========================== */
 void loop() {
   averageLoopsPerSecond(); // For debugging
+  if (digitalRead(ROTARY_ENCODER_SW)) {
+    cycleProfiles();
+  }
+
+  if (millis() - lastPress > 250 && millis() - lastHold > 250) {
+    showIdle();
+  }
+
   if (keypad.getKeys()) {
     for (int i = 0; i < LIST_MAX; i++) {
       if (keypad.key[i].stateChanged) {
         char currentKey = keypad.key[i].kchar;  
         KeyState currentState = keypad.key[i].kstate;
         handleKey(currentKey, currentState);
-        FastLED.clear();
-        leds[(byte)currentKey-(byte)keys[0][0]] = CRGB::White;
-        FastLED.show();
       }
     }
   }

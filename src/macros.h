@@ -226,10 +226,10 @@ Profile profiles[2];
 
 void assignMacros() {
     profiles[0] = Profile(0);
-    profiles[0].macros[0] = KeyMacro(systemVolumeUp, systemVolumeUpMultiple, KeyColor(0, 255, 255), KeyColor(0, 255, 127), KeyColor(63, 255, 127));
+    profiles[0].macros[0] = KeyMacro(systemVolumeUp, systemVolumeUpMultiple, KeyColor(0, 255, 0), KeyColor(0, 0, 255), KeyColor(255, 0, 0));
     profiles[0].macros[1] = KeyMacro(systemVolumeDown, systemVolumeDownMultiple, KeyColor(0, 255, 255), KeyColor(0, 127, 255), KeyColor(63, 127, 255));
-    profiles[0].macros[2] = KeyMacro(systemVolumeMuteToggle, KeyColor(255, 0, 0), KeyColor(0, 255, 0), KeyColor(0, 0, 255));
-    profiles[0].macros[3] = KeyMacro(discordMuteToggle, discordDeafenToggle, KeyColor(255, 0, 0), KeyColor(0, 255, 0), KeyColor(0, 0, 255));
+    profiles[0].macros[2] = KeyMacro(systemVolumeMuteToggle, KeyColor(0, 255, 255), KeyColor(127, 255, 0), KeyColor(0, 0, 255));
+    profiles[0].macros[3] = KeyMacro(discordMuteToggle, discordDeafenToggle, KeyColor(100, 20, 255), KeyColor(100, 20, 255), KeyColor(0, 0, 255));
     profiles[0].macros[4] = KeyMacro(browserRefresh, browserForceRefresh, KeyColor(255, 0, 0), KeyColor(0, 255, 0), KeyColor(0, 0, 255));
     profiles[0].macros[5] = KeyMacro();
     profiles[0].macros[6] = KeyMacro(moveLineUp, cloneLineUp, KeyColor(255, 0, 0), KeyColor(0, 255, 0), KeyColor(0, 0, 255));
