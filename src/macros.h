@@ -100,6 +100,20 @@ void systemScreenSnippet() {
     press('s');
     releaseAll();
 }
+void systemUndo() {
+    releaseAll();
+    press(KEY_LEFT_CTRL);
+    press('z');
+    releaseAll();
+}
+void systemRedo() {
+    releaseAll();
+    press(KEY_LEFT_CTRL);
+    press(KEY_LEFT_SHIFT);
+    press('z');
+    releaseAll();
+}
+
 
 
 //VS CODE
@@ -231,7 +245,7 @@ void assignMacros() {
     profiles[0].macros[2] = KeyMacro(systemVolumeMuteToggle, KeyColor(0, 255, 255), KeyColor(127, 255, 0), KeyColor(0, 0, 255));
     profiles[0].macros[3] = KeyMacro(discordMuteToggle, discordDeafenToggle, KeyColor(100, 20, 255), KeyColor(100, 20, 255), KeyColor(0, 0, 255));
     profiles[0].macros[4] = KeyMacro(browserRefresh, browserForceRefresh, KeyColor(255, 0, 0), KeyColor(0, 255, 0), KeyColor(0, 0, 255));
-    profiles[0].macros[5] = KeyMacro();
+    profiles[0].macros[5] = KeyMacro(systemUndo, systemRedo, KeyColor(255, 0, 0), KeyColor(0, 255, 0), KeyColor(0, 0, 255));
     profiles[0].macros[6] = KeyMacro(moveLineUp, cloneLineUp, KeyColor(255, 0, 0), KeyColor(0, 255, 0), KeyColor(0, 0, 255));
     profiles[0].macros[7] = KeyMacro(moveLineDown, cloneLineDown, KeyColor(255, 0, 0), KeyColor(0, 255, 0), KeyColor(0, 0, 255));
 }

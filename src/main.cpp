@@ -1,7 +1,14 @@
 #include <Arduino.h>
+
 #include <Keypad.h>
+
+#define HID_CUSTOM_LAYOUT // set this flag to indicate that a custom layout is selected
+// if the above flag is not defined, then the default US layout is used instead
+#define LAYOUT_GERMAN //Cho
 #include <HID-Project.h>
+
 #include <FastLED.h>
+
 #include <macros.h>
 
 /* ===================== ROTARY ENCODER ===================== */
@@ -58,23 +65,25 @@ unsigned long lastHold = 0;
 void handleKey(char key, KeyState state) {
   byte keyIndex = (byte)key-(byte)keys[0][0]; 
   KeyMacro macro = profiles[currentProfile].macros[keyIndex];
-  if (state == PRESSED) {
-    heldDown = false;
-  }
-  else if (state == HOLD) {
-    heldDown = true;
-    macro.onHold();
-    lastHold = millis();
-    leds[keyIndex].setRGB(macro.holdColor.r, macro.holdColor.g, macro.holdColor.b);
-    FastLED.show();
-  }
-  else if (state == RELEASED) {
-    if (!heldDown) {
-      macro.onPress();      
-      lastPress = millis();
-      leds[keyIndex].setRGB(macro.pressColor.r, macro.pressColor.g, macro.pressColor.b);
+  switch (state) {
+    case PRESSED:
+      heldDown = false;
+      break;
+    case HOLD:
+      heldDown = true;
+      macro.onHold();
+      lastHold = millis();
+      leds[keyIndex].setRGB(macro.holdColor.r, macro.holdColor.g, macro.holdColor.b);
       FastLED.show();
-    }
+      break;
+    case RELEASED:
+      if (!heldDown) {
+        macro.onPress();      
+        lastPress = millis();
+        leds[keyIndex].setRGB(macro.pressColor.r, macro.pressColor.g, macro.pressColor.b);
+        FastLED.show();
+      }
+      break;
   }
 }
 
@@ -104,7 +113,6 @@ void setup() {
   FastLED.addLeds<NEOPIXEL, LED_DATA_PIN>(leds, NUM_LEDS);  
   FastLED.clear();
   FastLED.setBrightness(10);
-  FastLED.show();
   showIdle();
 }
 
