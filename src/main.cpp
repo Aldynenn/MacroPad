@@ -41,20 +41,6 @@ byte colPins[COLS] = {9, 8, 7, 6};
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
 
-/* ============== COUNTING LOOPS FOR DEBUGGING ============== */
-unsigned long loopCount;
-unsigned long startTime;
-void averageLoopsPerSecond() {
-  loopCount++;
-  if ((millis() - startTime) > 1000) {
-    Serial.print("AVG loops/s: ");
-    Serial.println(loopCount);
-    startTime = millis();
-    loopCount = 0;
-  }
-}
-
-
 /* =================== PROFILE MANAGEMENT =================== */
 byte currentProfile = 0;
 void cycleProfiles() {
@@ -110,8 +96,6 @@ void setup() {
   pinMode(ROTARY_ENCODER_SW, INPUT);
 
   Serial.begin(115200);
-  loopCount = 0;
-  startTime = millis();
 
   keypad.setHoldTime(200);
 
@@ -124,10 +108,9 @@ void setup() {
   showIdle();
 }
 
-
+unsigned long lastTime = 0;
 /* ========================== LOOP ========================== */
 void loop() {
-  averageLoopsPerSecond(); // For debugging
   if (digitalRead(ROTARY_ENCODER_SW)) {
     cycleProfiles();
   }
@@ -144,5 +127,11 @@ void loop() {
         handleKey(currentKey, currentState);
       }
     }
+  }
+  
+  if (millis() - lastTime > 1000) {
+    lastTime = millis();
+    Serial.print("Milliseconds since code began: ");
+    Serial.println(millis());
   }
 }
