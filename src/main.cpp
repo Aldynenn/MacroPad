@@ -35,15 +35,17 @@ bool ledState = false;
 //   {'M', 'N', 'O', 'P'}
 // };
 
-const byte ROWS = 2;
-const byte COLS = 4;
+const byte ROWS = 4;
+const byte COLS = 2;
 char keys[ROWS][COLS] = {
-  {'A', 'B', 'C', 'D'},
-  {'E', 'F', 'G', 'H'}
+  {'H', 'D'},
+  {'G', 'C'}, 
+  {'F', 'B'},
+  {'E', 'A'} 
 };
 
-byte rowPins[ROWS] = {5, 4};
-byte colPins[COLS] = {9, 8, 7, 6};
+byte rowPins[ROWS] = {6, 7, 8, 9};
+byte colPins[COLS] = {4, 5};
 
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
@@ -71,17 +73,23 @@ void handleKey(char key, KeyState state) {
       break;
     case HOLD:
       heldDown = true;
-      macro.onHold();
+      // macro.onHold();
       lastHold = millis();
-      leds[keyIndex].setRGB(macro.holdColor.r, macro.holdColor.g, macro.holdColor.b);
-      FastLED.show();
+      // leds[keyIndex].setRGB(macro.holdColor.r, macro.holdColor.g, macro.holdColor.b);
+      // FastLED.show();
+      Serial.print("Key ");
+      Serial.print(key);
+      Serial.println(" held down");
       break;
     case RELEASED:
       if (!heldDown) {
-        macro.onPress();      
+        // macro.onPress();
         lastPress = millis();
-        leds[keyIndex].setRGB(macro.pressColor.r, macro.pressColor.g, macro.pressColor.b);
-        FastLED.show();
+        // leds[keyIndex].setRGB(macro.pressColor.r, macro.pressColor.g, macro.pressColor.b);
+        // FastLED.show();
+        Serial.print("Key ");
+        Serial.print(key);
+        Serial.println(" pressed");
       }
       break;
   }
@@ -137,9 +145,9 @@ void loop() {
     }
   }
   
-  if (millis() - lastTime > 1000) {
-    lastTime = millis();
-    Serial.print("Milliseconds since code began: ");
-    Serial.println(millis());
-  }
+  // if (millis() - lastTime > 1000) {
+  //   lastTime = millis();
+  //   Serial.print("Milliseconds since code began: ");
+  //   Serial.println(millis());
+  // }
 }
